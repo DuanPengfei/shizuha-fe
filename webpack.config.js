@@ -2,7 +2,7 @@
  * @Author: fei
  * @Date: 2018-01-14 00:20:43
  * @Last Modified by: fei
- * @Last Modified time: 2018-01-14 00:31:13
+ * @Last Modified time: 2018-01-16 11:30:58
  */
 
 /**
@@ -24,10 +24,14 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].js'
     },
+    devtool: 'inline-source-map',
+    devServer: {
+        contentBase: './dist'
+    },
     module: {
         rules: [
             { test: /\.js$/, use: 'babel-loader', exclude: /node_modules/ },
-            { test: /\.css$/, use: [ 'style-loader', 'css-loader' ] }
+            { test: /\.css$/, use: ['style-loader', 'css-loader'] }
         ]
     },
     plugins: [

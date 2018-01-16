@@ -2,7 +2,7 @@
  * @Author: fei
  * @Date: 2018-01-14 00:20:49
  * @Last Modified by: fei
- * @Last Modified time: 2018-01-14 22:08:30
+ * @Last Modified time: 2018-01-16 14:22:51
  */
 
 import marked from 'marked';
@@ -18,9 +18,10 @@ import {
 import './index.css';
 
 const { TextArea } = Input;
+const ButtonGroup = Button.Group;
 
 
-class Editor extends React.Component {
+class MDEditor extends React.Component {
     constructor() {
         super();
         const markdownContent = localStorage.getItem('markdownContent');
@@ -30,8 +31,6 @@ class Editor extends React.Component {
     }
 
     handleContentChange(event) {
-        console.log(event.target.value);
-
         this.setState({
             markdownContent: event.target.value
         });
@@ -42,7 +41,7 @@ class Editor extends React.Component {
     }
 
     handleKeyDown(event) {
-        switch(event.keyCode) {
+        switch (event.keyCode) {
             case 9: {
                 event.preventDefault();
                 const indent = '    '; // 4 space
@@ -75,14 +74,14 @@ class Editor extends React.Component {
                     fontFamily: 'monospace,cursive',
                     padding: '20px'
                 }}
-                value={ this.state.markdownContent }
-                onKeyDown={ this.handleKeyDown.bind(this) }
-                onChange={ this.handleContentChange.bind(this) } />
+                value={this.state.markdownContent}
+                onKeyDown={this.handleKeyDown.bind(this)}
+                onChange={this.handleContentChange.bind(this)} />
         );
     }
 }
 
-class Render extends React.Component {
+class MDRender extends React.Component {
     markdownToHTML(markdownContent) {
         return marked(markdownContent);
     }
@@ -102,13 +101,55 @@ class Render extends React.Component {
     }
 }
 
-class App extends React.Component {
+class MDHeader extends React.Component {
+    render() {
+        return (
+            <div>
+                <Row>
+                    <Col span={24}>
+                        <Button
+                            style={{ fontFamily: 'monospace,cursive' }}
+                            onClick={this.props.htmlToPDF}
+                        >
+                            导出到 PDF
+                    </Button>
+                        <ButtonGroup
+                            style={{ marginLeft: '10px' }}
+                        >
+                            <Button
+                                value="10"
+                                onClick={this.props.handleViewModeChange}
+                            >
+                                1:0
+                        </Button>
+                            <Button
+                                value="11"
+                                onClick={this.props.handleViewModeChange}
+                            >
+                                1:1
+                        </Button>
+                            <Button
+                                value="01"
+                                onClick={this.props.handleViewModeChange}
+                            >
+                                0:1
+                        </Button>
+                        </ButtonGroup>
+                    </Col>
+                </Row>
+            </div>
+        );
+    }
+}
+
+class MD extends React.Component {
     constructor() {
         super();
         const markdownContent = localStorage.getItem('markdownContent');
         this.state = {
             markdownContent: markdownContent || '',
-            isPrinting: false
+            isPrinting: false,
+            viewMode: '11'
         };
     }
 
@@ -130,6 +171,12 @@ class App extends React.Component {
         });
     }
 
+    handleViewModeChange(event) {
+        this.setState({
+            viewMode: event.target.value
+        });
+    }
+
     render() {
         if (this.state.isPrinting) {
             return (
@@ -137,35 +184,53 @@ class App extends React.Component {
                     <Row>
                         <Col span={18} offset={3}>
                             <div
-                                dangerouslySetInnerHTML={ { __html: marked(this.state.markdownContent) } }>
+                                dangerouslySetInnerHTML={{ __html: marked(this.state.markdownContent) }}>
                             </div>
                         </Col>
                     </Row>
                 </div>
             );
-        } else {
+        } else if ('11' === this.state.viewMode) {
             return (
-                <div
-                    style={{ padding: '10px' }}>
-                    <Row>
-                        <Col span={24}>
-                            <Button
-                                style={{ fontFamily: 'monospace,cursive' }}
-                                onClick={ this.htmlToPDF.bind(this) }>
-                                导出到 PDF
-                            </Button>
-                        </Col>
-                    </Row>
+                <div style={{ padding: '10px' }}>
+                    <MDHeader
+                        htmlToPDF={this.htmlToPDF.bind(this)}
+                        handleViewModeChange={this.handleViewModeChange.bind(this)} />
                     <Row
                         style={{ marginTop: '20px' }}
-                        gutter={8}>
+                        gutter={8}
+                    >
                         <Col span={12}>
-                            <Editor
-                                handleMarkdownContentChange={ this.handleMarkdownContentChange.bind(this) } /> 
+                            <MDEditor handleMarkdownContentChange={this.handleMarkdownContentChange.bind(this)} />
                         </Col>
                         <Col span={12}>
-                            <Render
-                                markdownContent={ this.state.markdownContent } />
+                            <MDRender markdownContent={this.state.markdownContent} />
+                        </Col>
+                    </Row>
+                </div>
+            );
+        } else if ('01' === this.state.viewMode) {
+            return (
+                <div style={{ padding: '10px' }}>
+                    <MDHeader
+                        htmlToPDF={this.htmlToPDF.bind(this)}
+                        handleViewModeChange={this.handleViewModeChange.bind(this)} />
+                    <Row style={{ marginTop: '20px' }}>
+                        <Col span={24}>
+                            <MDRender markdownContent={this.state.markdownContent} />
+                        </Col>
+                    </Row>
+                </div>
+            );
+        } else if ('10' === this.state.viewMode) {
+            return (
+                <div style={{ padding: '10px' }}>
+                    <MDHeader
+                        htmlToPDF={this.htmlToPDF.bind(this)}
+                        handleViewModeChange={this.handleViewModeChange.bind(this)} />
+                    <Row style={{ marginTop: '20px' }}>
+                        <Col span={24}>
+                            <MDEditor handleMarkdownContentChange={this.handleMarkdownContentChange.bind(this)} />
                         </Col>
                     </Row>
                 </div>
@@ -175,6 +240,6 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-    <App />,
+    <MD />,
     document.getElementById('root')
 );
