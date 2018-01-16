@@ -2,44 +2,31 @@
  * @Author: fei
  * @Date: 2018-01-14 00:20:49
  * @Last Modified by: fei
- * @Last Modified time: 2018-01-16 14:22:51
+ * @Last Modified time: 2018-01-16 16:59:28
  */
 
+import axios from 'axios';
 import marked from 'marked';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import {
     Button,
     Col,
+    Icon,
     Input,
-    Row
+    message,
+    Row,
+    Upload
 } from 'antd';
 
 import './index.css';
+import Form from '_antd@3.1.3@antd/lib/form/Form';
 
 const { TextArea } = Input;
 const ButtonGroup = Button.Group;
 
 
 class MDEditor extends React.Component {
-    constructor() {
-        super();
-        const markdownContent = localStorage.getItem('markdownContent');
-        this.state = {
-            markdownContent: markdownContent || ''
-        };
-    }
-
-    handleContentChange(event) {
-        this.setState({
-            markdownContent: event.target.value
-        });
-
-        if (this.props.handleMarkdownContentChange) {
-            this.props.handleMarkdownContentChange(event.target.value);
-        }
-    }
-
     handleKeyDown(event) {
         switch (event.keyCode) {
             case 9: {
@@ -67,6 +54,7 @@ class MDEditor extends React.Component {
     render() {
         return (
             <TextArea
+                id="md-editor"
                 spellCheck="false"
                 autosize={{ minRows: 20 }}
                 style={{
@@ -74,9 +62,9 @@ class MDEditor extends React.Component {
                     fontFamily: 'monospace,cursive',
                     padding: '20px'
                 }}
-                value={this.state.markdownContent}
+                value={this.props.markdownContent}
                 onKeyDown={this.handleKeyDown.bind(this)}
-                onChange={this.handleContentChange.bind(this)} />
+                onChange={this.props.handleMarkdownContentChange} />
         );
     }
 }
@@ -102,39 +90,79 @@ class MDRender extends React.Component {
 }
 
 class MDHeader extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            fileList: []
+        };
+    }
+
+    uploadCustomRequest({ file, onSuccess, onError }) {
+        const self = this;
+
+        const form = new FormData();
+        form.append('file', file);
+        form.append('dir', '/shizuha');
+
+        axios.post('http://node-upload.sqaproxy.souche.com/upload/aliyun', form)
+            .then(function (res) {
+                if (1 !== res.data.success) {
+                    onError(new Error('upload picture failed'));
+                    return message.error('上传图片失败');
+                }
+
+                onSuccess(undefined, file);
+                self.setState({
+                    fileList: []
+                });
+                return self.props.insertImgToMarkdownContent(res.data.path, file.name);
+            })
+            .catch(function (err) {
+                onError(err);
+                return message.error(err.message);
+            });
+    }
+
     render() {
         return (
-            <div>
+            <div style={{ fontFamily: 'monospace,cursive' }}>
                 <Row>
                     <Col span={24}>
-                        <Button
-                            style={{ fontFamily: 'monospace,cursive' }}
-                            onClick={this.props.htmlToPDF}
-                        >
+                        <Button onClick={this.props.htmlToPDF}>
                             导出到 PDF
-                    </Button>
-                        <ButtonGroup
-                            style={{ marginLeft: '10px' }}
-                        >
+                        </Button>
+                        <ButtonGroup style={{ marginLeft: '10px' }}>
                             <Button
                                 value="10"
                                 onClick={this.props.handleViewModeChange}
                             >
                                 1:0
-                        </Button>
+                            </Button>
                             <Button
                                 value="11"
                                 onClick={this.props.handleViewModeChange}
                             >
                                 1:1
-                        </Button>
+                            </Button>
                             <Button
                                 value="01"
                                 onClick={this.props.handleViewModeChange}
                             >
                                 0:1
-                        </Button>
+                            </Button>
                         </ButtonGroup>
+                        <Upload
+                            fileList={this.state.fileList}
+                            customRequest={this.uploadCustomRequest.bind(this)}
+                            style={{
+                                marginLeft: '10px',
+                                fontFamily: 'monospace, cursive'
+                            }}
+                        >
+                            <Button>
+                                上传图片
+                            </Button>
+                        </Upload>
                     </Col>
                 </Row>
             </div>
@@ -153,7 +181,9 @@ class MD extends React.Component {
         };
     }
 
-    handleMarkdownContentChange(markdownContent) {
+    handleMarkdownContentChange(event) {
+        const markdownContent = event.target.value;
+
         localStorage.setItem('markdownContent', markdownContent)
         this.setState({
             markdownContent: markdownContent
@@ -177,6 +207,22 @@ class MD extends React.Component {
         });
     }
 
+    insertImgToMarkdownContent(url, name) {
+        const mdEditorElement = document.getElementById('md-editor');
+        const insertImg = ` ![${name}](${url}) `
+        const start = mdEditorElement.selectionStart;
+        const end = mdEditorElement.selectionEnd;
+        const current = start + insertImg.length;
+        const markdownContent = mdEditorElement.value.slice(0, start) +
+            insertImg +
+            mdEditorElement.value.slice(end);
+        this.handleMarkdownContentChange({
+            target: {
+                value: markdownContent
+            }
+        });
+    }
+
     render() {
         if (this.state.isPrinting) {
             return (
@@ -195,13 +241,16 @@ class MD extends React.Component {
                 <div style={{ padding: '10px' }}>
                     <MDHeader
                         htmlToPDF={this.htmlToPDF.bind(this)}
-                        handleViewModeChange={this.handleViewModeChange.bind(this)} />
+                        handleViewModeChange={this.handleViewModeChange.bind(this)}
+                        insertImgToMarkdownContent={this.insertImgToMarkdownContent.bind(this)} />
                     <Row
                         style={{ marginTop: '20px' }}
                         gutter={8}
                     >
                         <Col span={12}>
-                            <MDEditor handleMarkdownContentChange={this.handleMarkdownContentChange.bind(this)} />
+                            <MDEditor
+                                markdownContent={this.state.markdownContent}
+                                handleMarkdownContentChange={this.handleMarkdownContentChange.bind(this)} />
                         </Col>
                         <Col span={12}>
                             <MDRender markdownContent={this.state.markdownContent} />
@@ -214,7 +263,8 @@ class MD extends React.Component {
                 <div style={{ padding: '10px' }}>
                     <MDHeader
                         htmlToPDF={this.htmlToPDF.bind(this)}
-                        handleViewModeChange={this.handleViewModeChange.bind(this)} />
+                        handleViewModeChange={this.handleViewModeChange.bind(this)}
+                        insertImgToMarkdownContent={this.insertImgToMarkdownContent.bind(this)} />
                     <Row style={{ marginTop: '20px' }}>
                         <Col span={24}>
                             <MDRender markdownContent={this.state.markdownContent} />
@@ -227,10 +277,13 @@ class MD extends React.Component {
                 <div style={{ padding: '10px' }}>
                     <MDHeader
                         htmlToPDF={this.htmlToPDF.bind(this)}
-                        handleViewModeChange={this.handleViewModeChange.bind(this)} />
+                        handleViewModeChange={this.handleViewModeChange.bind(this)}
+                        insertImgToMarkdownContent={this.insertImgToMarkdownContent.bind(this)} />
                     <Row style={{ marginTop: '20px' }}>
                         <Col span={24}>
-                            <MDEditor handleMarkdownContentChange={this.handleMarkdownContentChange.bind(this)} />
+                            <MDEditor
+                                markdownContent={this.state.markdownContent}
+                                handleMarkdownContentChange={this.handleMarkdownContentChange.bind(this)} />
                         </Col>
                     </Row>
                 </div>
