@@ -2,7 +2,7 @@
  * @Author: fei
  * @Date: 2018-01-14 00:20:43
  * @Last Modified by: fei
- * @Last Modified time: 2018-01-16 11:30:58
+ * @Last Modified time: 2018-01-22 14:01:53
  */
 
 /**
@@ -15,6 +15,7 @@ const path = require('path');
  */
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -40,6 +41,7 @@ module.exports = {
             template: './src/index.html',
             filename: './index.html',
             title: 'shizuka'
-        })
+        }),
+        // new UglifyJsPlugin()
     ]
 };

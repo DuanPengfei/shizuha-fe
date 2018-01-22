@@ -2,7 +2,7 @@
  * @Author: fei
  * @Date: 2018-01-14 00:20:49
  * @Last Modified by: fei
- * @Last Modified time: 2018-01-16 16:59:28
+ * @Last Modified time: 2018-01-22 15:37:05
  */
 
 import axios from 'axios';
@@ -20,7 +20,6 @@ import {
 } from 'antd';
 
 import './index.css';
-import Form from '_antd@3.1.3@antd/lib/form/Form';
 
 const { TextArea } = Input;
 const ButtonGroup = Button.Group;
@@ -59,7 +58,7 @@ class MDEditor extends React.Component {
                 autosize={{ minRows: 20 }}
                 style={{
                     resize: 'none',
-                    fontFamily: 'monospace,cursive',
+                    fontFamily: this.props.fontFamily,
                     padding: '20px'
                 }}
                 value={this.props.markdownContent}
@@ -78,7 +77,7 @@ class MDRender extends React.Component {
         return (
             <div
                 style={{
-                    fontFamily: 'monospace,cursive',
+                    fontFamily: this.props.fontFamily,
                     padding: '20px',
                     border: '1px solid #d9d9d9',
                     borderRadius: '4px'
@@ -100,11 +99,11 @@ class MDHeader extends React.Component {
     uploadCustomRequest({ file, onSuccess, onError }) {
         const self = this;
 
-        const form = new FormData();
-        form.append('file', file);
-        form.append('dir', '/shizuha');
+        const data = new FormData();
+        data.append('file', file);
+        data.append('dir', '/shizuha');
 
-        axios.post('http://node-upload.sqaproxy.souche.com/upload/aliyun', form)
+        axios.post('http://node-upload.sqaproxy.souche.com/upload/aliyun', data)
             .then(function (res) {
                 if (1 !== res.data.success) {
                     onError(new Error('upload picture failed'));
@@ -125,13 +124,10 @@ class MDHeader extends React.Component {
 
     render() {
         return (
-            <div style={{ fontFamily: 'monospace,cursive' }}>
-                <Row>
-                    <Col span={24}>
-                        <Button onClick={this.props.htmlToPDF}>
-                            导出到 PDF
-                        </Button>
-                        <ButtonGroup style={{ marginLeft: '10px' }}>
+            <div style={{ fontFamily: this.props.fontFamily }}>
+                <Row gutter={8}>
+                    <Col span={6}>
+                        <ButtonGroup>
                             <Button
                                 value="10"
                                 onClick={this.props.handleViewModeChange}
@@ -151,18 +147,28 @@ class MDHeader extends React.Component {
                                 0:1
                             </Button>
                         </ButtonGroup>
+                    </Col>
+                    <Col span={6}>
+                        <Button onClick={this.props.htmlToPDF}>
+                            导出到 PDF
+                        </Button>
                         <Upload
                             fileList={this.state.fileList}
                             customRequest={this.uploadCustomRequest.bind(this)}
                             style={{
                                 marginLeft: '10px',
-                                fontFamily: 'monospace, cursive'
+                                fontFamily: this.props.fontFamily
                             }}
                         >
                             <Button>
                                 上传图片
                             </Button>
                         </Upload>
+                    </Col>
+                    <Col span={12}>
+                        <Input
+                            placeholder="CSS 自定义字体"
+                            onPressEnter={this.props.handleFontFamilyChange} />
                     </Col>
                 </Row>
             </div>
@@ -177,7 +183,8 @@ class MD extends React.Component {
         this.state = {
             markdownContent: markdownContent || '',
             isPrinting: false,
-            viewMode: '11'
+            viewMode: '11',
+            fontFamily: 'monospace, cursive'
         };
     }
 
@@ -188,6 +195,18 @@ class MD extends React.Component {
         this.setState({
             markdownContent: markdownContent
         });
+    }
+
+    handleFontFamilyChange(event) {
+        if(!event.target.value) {
+            this.setState({
+                fontFamily: 'monospace, cursive'
+            }); 
+        } else {
+            this.setState({
+                fontFamily: event.target.value
+            });
+        }
     }
 
     htmlToPDF() {
@@ -221,6 +240,7 @@ class MD extends React.Component {
                 value: markdownContent
             }
         });
+        message.success('图片地址已插入编辑框');
     }
 
     render() {
@@ -230,6 +250,7 @@ class MD extends React.Component {
                     <Row>
                         <Col span={18} offset={3}>
                             <div
+                                fontFamily={this.state.fontFamily}
                                 dangerouslySetInnerHTML={{ __html: marked(this.state.markdownContent) }}>
                             </div>
                         </Col>
@@ -240,8 +261,10 @@ class MD extends React.Component {
             return (
                 <div style={{ padding: '10px' }}>
                     <MDHeader
+                        fontFamily={this.state.fontFamily}
                         htmlToPDF={this.htmlToPDF.bind(this)}
                         handleViewModeChange={this.handleViewModeChange.bind(this)}
+                        handleFontFamilyChange={this.handleFontFamilyChange.bind(this)}
                         insertImgToMarkdownContent={this.insertImgToMarkdownContent.bind(this)} />
                     <Row
                         style={{ marginTop: '20px' }}
@@ -249,11 +272,14 @@ class MD extends React.Component {
                     >
                         <Col span={12}>
                             <MDEditor
+                                fontFamily={this.state.fontFamily}
                                 markdownContent={this.state.markdownContent}
                                 handleMarkdownContentChange={this.handleMarkdownContentChange.bind(this)} />
                         </Col>
                         <Col span={12}>
-                            <MDRender markdownContent={this.state.markdownContent} />
+                            <MDRender
+                                fontFamily={this.state.fontFamily}
+                                markdownContent={this.state.markdownContent} />
                         </Col>
                     </Row>
                 </div>
@@ -262,12 +288,16 @@ class MD extends React.Component {
             return (
                 <div style={{ padding: '10px' }}>
                     <MDHeader
+                        fontFamily={this.state.fontFamily}
                         htmlToPDF={this.htmlToPDF.bind(this)}
                         handleViewModeChange={this.handleViewModeChange.bind(this)}
+                        handleFontFamilyChange={this.handleFontFamilyChange.bind(this)}
                         insertImgToMarkdownContent={this.insertImgToMarkdownContent.bind(this)} />
                     <Row style={{ marginTop: '20px' }}>
                         <Col span={24}>
-                            <MDRender markdownContent={this.state.markdownContent} />
+                            <MDRender
+                                fontFamily={this.state.fontFamily}
+                                markdownContent={this.state.markdownContent} />
                         </Col>
                     </Row>
                 </div>
@@ -276,12 +306,15 @@ class MD extends React.Component {
             return (
                 <div style={{ padding: '10px' }}>
                     <MDHeader
+                        fontFamily={this.state.fontFamily}
                         htmlToPDF={this.htmlToPDF.bind(this)}
                         handleViewModeChange={this.handleViewModeChange.bind(this)}
+                        handleFontFamilyChange={this.handleFontFamilyChange.bind(this)}
                         insertImgToMarkdownContent={this.insertImgToMarkdownContent.bind(this)} />
                     <Row style={{ marginTop: '20px' }}>
                         <Col span={24}>
                             <MDEditor
+                                fontFamily={this.state.fontFamily}
                                 markdownContent={this.state.markdownContent}
                                 handleMarkdownContentChange={this.handleMarkdownContentChange.bind(this)} />
                         </Col>

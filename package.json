@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack-dev-server --port 7819"
+    "dev": "http-server dist -p 7819"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +24,7 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "style-loader": "^0.19.1",
+    "uglifyjs-webpack-plugin": "^1.1.6",
     "webpack": "^3.10.0"
   },
   "dependencies": {
