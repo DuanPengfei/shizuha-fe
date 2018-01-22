@@ -341,7 +341,7 @@ tt {
 pre code {
     margin: 0;
     padding: 0;
-    white-space: pre-wrap;
+    white-space: pre;
     border: none;
     background: transparent;
 }
@@ -403,5 +403,8 @@ kbd {
     }
     pre {
         word-wrap: break-word;
+    }
+    pre code {
+        white-space: pre-wrap;
     }
 }

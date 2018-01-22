@@ -30,7 +30,7 @@
   "dependencies": {
     "antd": "^3.1.1",
     "axios": "^0.17.1",
-    "marked": "^0.3.12",
+    "markdown-it": "^8.4.0",
     "mousetrap": "^1.6.1"
   }
 }

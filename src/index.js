@@ -2,11 +2,11 @@
  * @Author: fei
  * @Date: 2018-01-14 00:20:49
  * @Last Modified by: fei
- * @Last Modified time: 2018-01-22 15:37:05
+ * @Last Modified time: 2018-01-22 17:50:56
  */
 
 import axios from 'axios';
-import marked from 'marked';
+import MarkdownIt from 'markdown-it';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import {
@@ -40,7 +40,7 @@ class MDEditor extends React.Component {
                     selected +
                     event.target.value.slice(end);
                 event.target.selectionStart = event.target.selectionEnd = current;
-                this.handleContentChange(event);
+                this.props.handleMarkdownContentChange(event);
                 break;
             }
 
@@ -69,8 +69,13 @@ class MDEditor extends React.Component {
 }
 
 class MDRender extends React.Component {
+    constructor() {
+        super();
+        this.md = new MarkdownIt();
+    }
+
     markdownToHTML(markdownContent) {
-        return marked(markdownContent);
+        return this.md.render(markdownContent);
     }
 
     render() {
@@ -180,6 +185,7 @@ class MD extends React.Component {
     constructor() {
         super();
         const markdownContent = localStorage.getItem('markdownContent');
+        this.md = new MarkdownIt();
         this.state = {
             markdownContent: markdownContent || '',
             isPrinting: false,
@@ -248,10 +254,10 @@ class MD extends React.Component {
             return (
                 <div>
                     <Row>
-                        <Col span={18} offset={3}>
+                        <Col span={22} offset={1}>
                             <div
                                 fontFamily={this.state.fontFamily}
-                                dangerouslySetInnerHTML={{ __html: marked(this.state.markdownContent) }}>
+                                dangerouslySetInnerHTML={{ __html: this.md.render(this.state.markdownContent) }}>
                             </div>
                         </Col>
                     </Row>
