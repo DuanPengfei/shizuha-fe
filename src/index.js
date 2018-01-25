@@ -2,7 +2,7 @@
  * @Author: fei
  * @Date: 2018-01-14 00:20:49
  * @Last Modified by: fei
- * @Last Modified time: 2018-01-25 10:58:39
+ * @Last Modified time: 2018-01-25 18:07:59
  */
 
 import axios from 'axios';
@@ -264,7 +264,7 @@ class MD extends React.Component {
                     <Row>
                         <Col span={22} offset={1}>
                             <div
-                                fontFamily={this.state.fontFamily}
+                                style={{ fontFamily: this.state.fontFamily }}
                                 dangerouslySetInnerHTML={{ __html: this.md.render(this.state.markdownContent) }}>
                             </div>
                         </Col>
