@@ -2,11 +2,11 @@
  * @Author: fei
  * @Date: 2018-01-14 00:20:49
  * @Last Modified by: fei
- * @Last Modified time: 2018-01-22 17:50:56
+ * @Last Modified time: 2018-01-25 10:58:39
  */
 
 import axios from 'axios';
-import MarkdownIt from 'markdown-it';
+import markdownIt from 'markdown-it';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import {
@@ -71,7 +71,11 @@ class MDEditor extends React.Component {
 class MDRender extends React.Component {
     constructor() {
         super();
-        this.md = new MarkdownIt();
+        this.md = markdownIt({
+            html: true,
+            xhtmlOut: true,
+            linkify: true
+        });
     }
 
     markdownToHTML(markdownContent) {
@@ -185,7 +189,11 @@ class MD extends React.Component {
     constructor() {
         super();
         const markdownContent = localStorage.getItem('markdownContent');
-        this.md = new MarkdownIt();
+        this.md = markdownIt({
+            html: true,
+            xhtmlOut: true,
+            linkify: true
+        });
         this.state = {
             markdownContent: markdownContent || '',
             isPrinting: false,
