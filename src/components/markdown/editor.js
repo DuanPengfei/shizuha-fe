@@ -2,7 +2,7 @@
  * @Author: fei
  * @Date: 2018-02-07 17:20:08
  * @Last Modified by: fei
- * @Last Modified time: 2018-02-08 09:51:54
+ * @Last Modified time: 2018-02-08 13:47:19
  */
 
 /**
@@ -36,6 +36,71 @@ class Editor extends React.Component {
         return this.props.onMarkdownContentChange(event.target.value);
     }
 
+    handleKeyDown(event) {
+        switch (true) {
+            case 9 === event.keyCode: {
+                event.preventDefault();
+
+                const indent = '    '; // 4 space
+                const start = event.target.selectionStart;
+                const end = event.target.selectionEnd;
+                const current = start + indent.length;
+
+                let selected = window.getSelection().toString();
+                selected = indent + selected.replace(/\n/g, `\n${indent}`);
+                const newValue = event.target.value.slice(0, start) +
+                    selected +
+                    event.target.value.slice(end);
+                event.target.value = newValue
+
+                event.target.selectionStart = event.target.selectionEnd = current;
+                this.props.onMarkdownContentChange(newValue);
+                break;
+            }
+
+            // `}`: 221
+            case event.ctrlKey && 221 === event.keyCode: {
+                event.preventDefault();
+
+                const indent = '    '; // 4 space
+                const start = event.target.selectionStart;
+                const end = event.target.selectionEnd;
+                const current = start + indent.length;
+
+                let selected = window.getSelection().toString();
+                selected = indent + selected.replace(/\n/g, `\n${indent}`);
+                const newValue = event.target.value.slice(0, start) +
+                    selected +
+                    event.target.value.slice(end);
+                event.target.value = newValue
+
+                event.target.selectionStart = event.target.selectionEnd = current;
+                this.props.onMarkdownContentChange(newValue);
+                break;
+            }
+
+            // `{`: 219
+            case event.ctrlKey && 219 === event.keyCode: {
+                event.preventDefault();
+
+                const start = event.target.selectionStart;
+                const end = event.target.selectionEnd;
+
+                let selected = window.getSelection().toString();
+                selected = selected.replace('    ', '');
+                selected = selected.replace(/\n\s{4}/g, '\n');
+                const newValue = event.target.value.slice(0, start) +
+                    selected +
+                    event.target.value.slice(end);
+                event.target.value = newValue
+
+                event.target.selectionStart = event.target.selectionEnd = start;
+                this.props.onMarkdownContentChange(newValue);
+                break; 
+            }
+        }
+    }
+
     render() {
         return (
             <TextArea
@@ -48,7 +113,8 @@ class Editor extends React.Component {
                     padding: '20px'
                 }}
                 value={this.props.markdownContent}
-                onChange={this.handleMarkdownContentChange.bind(this)} />
+                onChange={this.handleMarkdownContentChange.bind(this)}
+                onKeyDown={this.handleKeyDown.bind(this)} />
         );
     }
 }

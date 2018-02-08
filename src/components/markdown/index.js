@@ -2,7 +2,7 @@
  * @Author: fei
  * @Date: 2018-02-07 17:15:14
  * @Last Modified by: fei
- * @Last Modified time: 2018-02-08 09:56:57
+ * @Last Modified time: 2018-02-08 13:20:28
  */
 
 /**
@@ -46,23 +46,74 @@ class MD extends Component {
                 </Row>
             );
         } else {
-            return (
-                <div style={{ padding: '10px' }}>
-                    <Row>
-                        <Col span={24}>
-                            <Header />
-                        </Col>
-                    </Row>
-                    <Row gutter={8} style={{ marginTop: '10px' }}>
-                        <Col span={12}>
-                            <Editor />
-                        </Col>
-                        <Col span={12}>
-                            <Render />
-                        </Col>
-                    </Row>
-                </div>
-            );
+            switch(this.props.viewMode) {
+                case '10':
+                    return (
+                        <div style={{ padding: '10px' }}>
+                            <Row>
+                                <Col span={24}>
+                                    <Header />
+                                </Col>
+                            </Row>
+                            <Row gutter={8} style={{ marginTop: '10px' }}>
+                                <Col span={24}>
+                                    <Editor />
+                                </Col>
+                            </Row>
+                        </div>
+                    );
+                case '11':
+                    return (
+                        <div style={{ padding: '10px' }}>
+                            <Row>
+                                <Col span={24}>
+                                    <Header />
+                                </Col>
+                            </Row>
+                            <Row gutter={8} style={{ marginTop: '10px' }}>
+                                <Col span={12}>
+                                    <Editor />
+                                </Col>
+                                <Col span={12}>
+                                    <Render />
+                                </Col>
+                            </Row>
+                        </div>
+                    );
+                case '01':
+                    return (
+                        <div style={{ padding: '10px' }}>
+                            <Row>
+                                <Col span={24}>
+                                    <Header />
+                                </Col>
+                            </Row>
+                            <Row gutter={8} style={{ marginTop: '10px' }}>
+                                <Col span={24}>
+                                    <Render />
+                                </Col>
+                            </Row>
+                        </div> 
+                    );
+                default:
+                    return (
+                        <div style={{ padding: '10px' }}>
+                            <Row>
+                                <Col span={24}>
+                                    <Header />
+                                </Col>
+                            </Row>
+                            <Row gutter={8} style={{ marginTop: '10px' }}>
+                                <Col span={12}>
+                                    <Editor />
+                                </Col>
+                                <Col span={12}>
+                                    <Render />
+                                </Col>
+                            </Row>
+                        </div>
+                    );
+            }
         }
     }
 }
