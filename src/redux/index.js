@@ -2,7 +2,7 @@
  * @Author: fei
  * @Date: 2018-02-07 17:03:44
  * @Last Modified by: fei
- * @Last Modified time: 2018-02-07 17:54:08
+ * @Last Modified time: 2018-02-09 13:29:59
  */
 
 /**
@@ -22,6 +22,6 @@ const reducer = combineReducers({
     markdown
 });
 
-export default function() {
-    return createStore(reducer);
+export default function(preloadState) {
+    return createStore(reducer, preloadState);
 };
