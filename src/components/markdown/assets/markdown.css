@@ -333,16 +333,18 @@ tt {
     margin: 0 2px;
     padding: 0 5px;
     white-space: nowrap;
-    border: 1px solid #eaeaea;
-    background-color: #f8f8f8;
+    border: none;
+    background-color: #F9F2F4;
     border-radius: 3px;
+    color: #C52950;
 }
 
 pre code {
     margin: 0;
     padding: 0;
     white-space: pre;
-    border: none;
+    border: 1px solid #eaeaea;
+    color: inherit;
     background: transparent;
 }
 
