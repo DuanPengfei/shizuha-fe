@@ -1,16 +1,16 @@
 /*
  * @Author: fei
  * @Date: 2018-02-07 17:20:08
- * @Last Modified by: fei
- * @Last Modified time: 2018-02-08 09:26:14
+ * @Last Modified by: huaiyu
+ * @Last Modified time: 2022-05-18 10:29:59
  */
 
 /**
  * third part module
  */
 import markdownIt from 'markdown-it';
-import PropTypes from 'process';
-import React, { Component } from 'react';
+const markdownItTaskList = require('markdown-it-task-lists')
+import React from 'react';
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => {
@@ -26,7 +26,7 @@ class Render extends React.Component {
             html: true,
             xhtmlOut: true,
             linkify: true
-        });
+        }).use(markdownItTaskList);
     }
 
     _markdownToHTML(markdownContent) {

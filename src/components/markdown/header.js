@@ -1,8 +1,8 @@
 /*
  * @Author: fei
  * @Date: 2018-02-07 17:20:08
- * @Last Modified by: fei
- * @Last Modified time: 2018-02-08 17:35:43
+ * @Last Modified by: huaiyu
+ * @Last Modified time: 2022-05-18 17:40:36
  */
 
 /**
@@ -34,6 +34,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onFontFamilyChange: (fontFamily) => {
             dispatch(actions.changeFontFamily(fontFamily));
+        },
+        onFontSizeChange: (fontSize) => {
+            dispatch(actions.changeFontSize(fontSize));
         },
         onIsPrintingChange: (isPrinting) => {
             dispatch(actions.changeIsPrinting(isPrinting));
@@ -86,6 +89,21 @@ class Header extends Component {
         return this.props.onFontFamilyChange(event.target.value);
     }
 
+    handleFontSizeChange(event) {
+        if (!event.target.value) return this.props.onFontFamilyChange(16);
+
+        let fontSize = parseInt(event.target.value);
+        if (isNaN(fontSize)) {
+            fontSize = 18
+        } else if (fontSize <= 6) {
+            fontSize = 6
+        } else if (fontSize >= 48) {
+            fontSize = 48
+        }
+        
+        return this.props.onFontSizeChange(fontSize);
+    }
+
     handleIsPrintingChange() {
         return this.props.onIsPrintingChange(true);
     }
@@ -120,26 +138,37 @@ class Header extends Component {
                             </Button>
                         </ButtonGroup>
                         <Button
-                            style={{ marginLeft: '10px' }}
+                            style={{ marginLeft: '18px' }}
                             onClick={this.handleIsPrintingChange.bind(this)}>
                             导出到 PDF
                         </Button>
-                        <Upload
+                        {/* <Upload
                             customRequest={this.handleUpload.bind(this)}
                             style={{
                                 ...this.props.style,
-                                marginLeft: '10px'
+                                marginLeft: '18px'
                             }}
                         >
-                            <Button>
+                            <Button
+                                style={{
+                                    marginLeft: '18px'
+                                }}
+                            >
                                 上传图片
                             </Button>
-                        </Upload>
+                        </Upload> */}
                     </Col>
-                    <Col span={12}>
+                    <Col span={6}>
                         <Input
-                            placeholder="CSS 自定义字体"
-                            onPressEnter={this.handleFontFamilyChange.bind(this)} />
+                            placeholder="输入自定义字体，按回车生效"
+                            onPressEnter={this.handleFontFamilyChange.bind(this)}
+                            defaultValue={this.props.style.fontFamily || undefined} />
+                    </Col>
+                    <Col span={6}>
+                        <Input
+                            placeholder="输入自定义字号，按回车生效"
+                            onPressEnter={this.handleFontSizeChange.bind(this)}
+                            defaultValue={this.props.style.fontSize || undefined} />
                     </Col>
                 </Row>
             </div>

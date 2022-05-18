@@ -4,7 +4,6 @@
 ### 开发环境
 ```
 npm install
-npm run build
 npm run dev
 ```
 
@@ -12,6 +11,6 @@ npm run dev
 ```
 npm install
 npm run build
-
-复制 dist 目录下所有文件到服务端静态文件目录
+cd dist
+npm run package
 ```

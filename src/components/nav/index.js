@@ -1,8 +1,8 @@
 /*
  * @Author: fei
  * @Date: 2018-02-07 15:36:10
- * @Last Modified by: fei
- * @Last Modified time: 2018-02-09 14:03:14
+ * @Last Modified by: huaiyu
+ * @Last Modified time: 2022-05-18 18:19:28
  */
 
 /**
@@ -24,6 +24,7 @@ import logo from './assets/logo.png';
  * custom module: components
  */
 import MD from '../markdown';
+import { Redirect } from 'react-router-dom';
 
 class ToDo extends Component {
     render() {
@@ -48,14 +49,14 @@ const mapStateToProps = (state) => {
 }
 class Nav extends Component {
     render() {
-        console.log(this.props.isPrinting);
         if(this.props.isPrinting) {
             return (
                 <div>
                     <div>
-                        <Route exact path="/" component={ToDo} />
-                        <Route exact path="/todo" component={ToDo} />
+                        {/* <Route exact path="/" component={ToDo} /> */}
+                        {/* <Route exact path="/todo" component={ToDo} /> */}
                         <Route exact path="/markdown" component={MD} />
+                        <Route path="/" component={MD} />
                     </div>
                 </div>
             );
@@ -65,14 +66,15 @@ class Nav extends Component {
                     <div className="nav">
                         <div className="logo"><img src={logo} /></div>
                         <ul>
-                            <li><Link to="/todo">ToDo</Link></li>
+                            {/* <li><Link to="/todo">ToDo</Link></li> */}
                             <li><Link to="/markdown">Markdown</Link></li>
                         </ul>
                     </div>
                     <div>
-                        <Route exact path="/" component={ToDo} />
-                        <Route exact path="/todo" component={ToDo} />
+                        {/* <Route exact path="/" component={ToDo} /> */}
+                        {/* <Route exact path="/todo" component={ToDo} /> */}
                         <Route exact path="/markdown" component={MD} />
+                        <Route path="/" component={MD} />
                     </div>
                 </div>
             );

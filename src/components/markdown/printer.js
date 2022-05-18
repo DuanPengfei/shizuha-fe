@@ -1,14 +1,15 @@
 /*
  * @Author: fei
  * @Date: 2018-02-07 17:20:08
- * @Last Modified by: fei
- * @Last Modified time: 2018-02-08 10:40:19
+ * @Last Modified by: huaiyu
+ * @Last Modified time: 2022-05-18 10:39:02
  */
 
 /**
  * third part module
  */
 import markdownIt from 'markdown-it';
+const markdownItTaskList = require('markdown-it-task-lists')
 import PropTypes from 'process';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -35,7 +36,7 @@ class Printer extends React.Component {
             html: true,
             xhtmlOut: true,
             linkify: true
-        });
+        }).use(markdownItTaskList);
     }
 
     componentDidMount() {

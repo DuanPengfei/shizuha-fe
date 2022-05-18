@@ -1,5 +1,5 @@
 body {
-    font-family: courier;
+    font-family: Iosevka, Kai;
     padding: 0;
     margin: 0;
 }
@@ -16,7 +16,7 @@ body {
 .nav .logo img {
     height: 44px;
     width: 44px;
-    border-radius: 44px;
+    /* border-radius: 44px; */
 }
 
 .nav ul {

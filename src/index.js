@@ -1,8 +1,8 @@
 /*
  * @Author: fei
  * @Date: 2018-02-07 15:36:10
- * @Last Modified by: fei
- * @Last Modified time: 2018-02-09 13:36:24
+ * @Last Modified by: huaiyu
+ * @Last Modified time: 2022-05-18 10:41:15
  */
 
 /**
@@ -20,7 +20,7 @@ import {
 /**
  * custom module: components, store;
  */
-import configureStroe from './redux';
+import configureStore from './redux';
 import MD from './components/markdown';
 import Nav from './components/nav';
 
@@ -42,7 +42,7 @@ function saveToLocalState(state) {
     }
 }
 
-const store = configureStroe(getLocalState());
+const store = configureStore(getLocalState());
 store.subscribe(() => saveToLocalState(store.getState()));
 
 ReactDOM.render(

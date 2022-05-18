@@ -1,14 +1,15 @@
 /*
  * @Author: fei
  * @Date: 2018-02-07 16:30:35
- * @Last Modified by: fei
- * @Last Modified time: 2018-02-07 18:19:33
+ * @Last Modified by: huaiyu
+ * @Last Modified time: 2022-05-18 11:08:51
  */
 const initialState = {
     markdownContent: '',
     isPrinting: false,
     style: {
-        fontFamily: 'monospace, cursive'
+        fontFamily: 'Iosevka, TsangerJinKai01 W03',
+        fontSize: 18,
     },
     viewMode: '11',
     editorElement: null
@@ -18,6 +19,7 @@ const TYPES = {
     CHANGE_IS_PRINTING: 'CHANGE_IS_PRINTING',
     CHANGE_VIEW_MODE: 'CHANGE_VIEW_MODE',
     CHANGE_FONT_FAMILY: 'CHANGE_FONT_FAMILY',
+    CHANGE_FONT_SIZE: 'CHANGE_FONT_SIZE',
     CHANGE_EDITOR_ELEMENT: 'CHANGE_EDITOR_ELEMENT'
 };
 const reducer = (state = initialState, action = {}) => {
@@ -29,7 +31,9 @@ const reducer = (state = initialState, action = {}) => {
         case TYPES.CHANGE_VIEW_MODE:
             return { ...state, viewMode: action.viewMode };
         case TYPES.CHANGE_FONT_FAMILY:
-            return { ...state, style: { fontFamily: action.fontFamily } };
+            return { ...state, style: { ...state.style, fontFamily: action.fontFamily } };
+        case TYPES.CHANGE_FONT_SIZE:
+            return { ...state, style: { ...state.style, fontSize: action.fontSize } };
         case TYPES.CHANGE_EDITOR_ELEMENT:
             return { ...state, editorElement: action.editorElement };
         default:
@@ -59,7 +63,13 @@ const actions = {
         return {
             type: TYPES.CHANGE_FONT_FAMILY,
             fontFamily: arguments[0]
-        }
+        };
+    },
+    changeFontSize() {
+        return {
+            type: TYPES.CHANGE_FONT_SIZE,
+            fontSize: arguments[0],
+        };
     },
     changeEditorElement() {
         return {

@@ -2,10 +2,11 @@
   "name": "shizuha-fe",
   "version": "1.3.1",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "build": "webpack",
-    "dev": "http-server dist -p 7819"
+    "build": "webpack && cp package.json dist/package.json && cp electron/main.js dist/main.js && cp src/components/nav/assets/icon.icns dist/icon.icns",
+    "dev": "webpack-dev-server --config webpack.config.js",
+    "package": "../node_modules/.bin/electron-packager . shizuha --icon icon.icns"
   },
   "keywords": [],
   "author": "",
@@ -19,18 +20,23 @@
     "babel-preset-stage-2": "^6.24.1",
     "clean-webpack-plugin": "^0.1.18",
     "css-loader": "^0.28.9",
+    "electron": "^18.2.3",
+    "electron-packager": "^15.5.1",
     "file-loader": "^1.1.6",
     "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^2.30.1",
+    "html-webpack-plugin": "^4.5.2",
     "http-server": "^0.11.1",
     "style-loader": "^0.20.1",
-    "uglifyjs-webpack-plugin": "^1.1.8",
-    "webpack": "^3.10.0"
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.37.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.0"
   },
   "dependencies": {
     "antd": "^3.2.0",
     "axios": "^0.17.1",
     "markdown-it": "^8.4.0",
+    "markdown-it-task-lists": "^2.1.1",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
