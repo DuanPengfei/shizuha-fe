@@ -2,14 +2,13 @@
  * @Author: fei
  * @Date: 2018-02-07 17:20:08
  * @Last Modified by: huaiyu
- * @Last Modified time: 2022-05-18 17:40:36
+ * @Last Modified time: 2022-05-19 10:27:47
  */
 
 /**
  * third part module
  */
-import axios from 'axios';
-import PropTypes from 'process';
+// import axios from 'axios';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
@@ -62,27 +61,27 @@ class Header extends Component {
         return markdownContent;
     }
 
-    handleUpload({ file, onSuccess, onError }) {
-        const data = new FormData();
-        data.append('file', file);
-        data.append('dir', '/shizuha');
+    // handleUpload({ file, onSuccess, onError }) {
+    //     const data = new FormData();
+    //     data.append('file', file);
+    //     data.append('dir', '/shizuha');
 
-        axios.post('http://node-upload.sqaproxy.souche.com/upload/aliyun', data)
-            .then((res) => {
-                if (1 !== res.data.success) {
-                    onError(new Error('upload picture failed'));
-                    return message.error('上传图片失败');
-                }
+    //     axios.post('http://node-upload.sqaproxy.souche.com/upload/aliyun', data)
+    //         .then((res) => {
+    //             if (1 !== res.data.success) {
+    //                 onError(new Error('upload picture failed'));
+    //                 return message.error('上传图片失败');
+    //             }
 
-                onSuccess(undefined, file);
-                this.props.onMarkdownContentChange(this._insertImgToMarkdownContent(res.data.path, file.name));
-                message.success('图片地址已插入编辑框');
-            })
-            .catch(function (err) {
-                onError(err);
-                return message.error(err.message);
-            });
-    }
+    //             onSuccess(undefined, file);
+    //             this.props.onMarkdownContentChange(this._insertImgToMarkdownContent(res.data.path, file.name));
+    //             message.success('图片地址已插入编辑框');
+    //         })
+    //         .catch(function (err) {
+    //             onError(err);
+    //             return message.error(err.message);
+    //         });
+    // }
 
     handleFontFamilyChange(event) {
         if (!event.target.value) return this.props.onFontFamilyChange('monospace, cursive');

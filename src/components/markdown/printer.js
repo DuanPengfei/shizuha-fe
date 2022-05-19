@@ -2,7 +2,7 @@
  * @Author: fei
  * @Date: 2018-02-07 17:20:08
  * @Last Modified by: huaiyu
- * @Last Modified time: 2022-05-18 10:39:02
+ * @Last Modified time: 2022-05-19 10:42:50
  */
 
 /**
@@ -10,8 +10,7 @@
  */
 import markdownIt from 'markdown-it';
 const markdownItTaskList = require('markdown-it-task-lists')
-import PropTypes from 'process';
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import { actions } from '../../redux/markdown';

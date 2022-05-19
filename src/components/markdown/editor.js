@@ -1,15 +1,14 @@
 /*
  * @Author: fei
  * @Date: 2018-02-07 17:20:08
- * @Last Modified by: fei
- * @Last Modified time: 2018-02-08 13:47:19
+ * @Last Modified by: huaiyu
+ * @Last Modified time: 2022-05-18 21:23:33
  */
 
 /**
  * third part module
  */
-import PropTypes from 'process';
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Input } from 'antd';
 
@@ -31,6 +30,7 @@ const mapDispatchToProps = (dispatch) => {
         }
     };
 };
+
 class Editor extends React.Component {
     handleMarkdownContentChange(event) {
         return this.props.onMarkdownContentChange(event.target.value);
@@ -106,7 +106,7 @@ class Editor extends React.Component {
             <TextArea
                 id="shizuha-md-editor"
                 spellCheck="false"
-                autosize={{ minRows: 20 }}
+                autoSize={{ minRows: 20 }}
                 style={{
                     ...this.props.style,
                     resize: 'none',
